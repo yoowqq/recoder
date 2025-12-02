@@ -29,4 +29,4 @@ jobs:
           pip install beautifulsoup4 selenium webdriver-manager
 
       - name: 运行直播检查脚本
-        run: python check_live.py
+        run: python /home/runner/work/recoder/recoder/check_live.py
