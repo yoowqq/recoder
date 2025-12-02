@@ -20,7 +20,7 @@ def check_is_live():
     opts.add_experimental_option("excludeSwitches", ["enable-logging"]) 
 
     #service = Service(executable_path=r"D:\code\recoder\chromedriver.exe")
-    service = Service(ChromeDriverManager.install())
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service,options=opts)
     driver.get(TARGET_URL)
     time.sleep(5)
