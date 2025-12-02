@@ -1,0 +1,45 @@
+name: 测试文件是否存在
+on:
+  workflow_dispatch:  # 仅手动触发，避免自动运行
+  push:
+    branches: [ "main" ]  # 可选：推代码时自动测试
+
+permissions:
+  contents: read
+
+jobs:
+  check-file:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出代码（强制main分支）
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0  # 拉取完整代码，避免浅克隆
+
+      # 2. 核心测试：遍历路径+查找文件
+      - name: 测试文件是否存在
+        run: |
+          echo "===== 1. 打印Actions工作区所有路径 ====="
+          # 列出外层目录（/home/runner/work/recoder/）
+          ls -la /home/runner/work/recoder/
+          
+          echo -e "\n===== 2. 打印内层代码目录（核心） ====="
+          # 列出内层目录（/home/runner/work/recoder/recoder/）
+          cd /home/runner/work/recoder/recoder/
+          pwd  # 打印当前路径
+          ls -la  # 列出所有文件（含隐藏文件）
+          
+          echo -e "\n===== 3. 全局搜索check_live.py ====="
+          # 从根目录搜索脚本，输出所有匹配结果
+          find /home/runner/work/ -name "check_live.py"
+          
+          echo -e "\n===== 4. 验证文件是否存在 ====="
+          # 直接检查内层目录的脚本
+          if [ -f "/home/runner/work/recoder/recoder/check_live.py" ]; then
+            echo "✅ 成功找到 check_live.py 文件！"
+          else
+            echo "❌ 未找到 check_live.py 文件！"
+            exit 1  # 报错退出，便于发现问题
+          fi
