@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      #1
+      # 1
       - name: 检出仓库代码
       uses: actions/checkout@v4
 
-      #2
+      # 2
       - name: 安装chrome浏览器
         run: |
             sudo apt update
