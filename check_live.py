@@ -76,7 +76,8 @@ def record(driver):
 def workflow(driver):
     live_state = check_is_live(driver)
     updateLiveState(live_state)
-    record(driver)
+    if(live_state):
+        record(driver)
     time.sleep(2)
     driver.quit()
 
