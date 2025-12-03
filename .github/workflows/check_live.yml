@@ -1,8 +1,8 @@
 name: 检查直播状态
 on:
   workflow_dispatch:
-#  schedule:
-#    - cron: "*/10 * * * *"
+  schedule:
+    - cron: "*/20 * * * *"
 
 permissions:
   contents: read
@@ -41,5 +41,6 @@ jobs:
           LIVE_URL: ${{ secrets.LIVE_URL }}
           TGID: ${{ secrets.TGID }}
           RECORD_URL: ${{ secrets.RECORD_URL }}
+          FEISHU_URL: ${{ secrets.FEISHU_URL }}
         run: |
           python /home/runner/work/recoder/recoder/check_live.py

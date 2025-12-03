@@ -40,22 +40,22 @@ def getLiveState():
     return test_database.getLiveState(USERID)
 
 def check_is_live(driver):
-    send_message("--------正在检测直播状态--------",False)
+    send_msg("--------正在检测直播状态--------",False)
     driver.get(TARGET_URL)
     random_delay()
     soup = BeautifulSoup(driver.page_source, "html.parser")
     is_live = not bool(soup.find("div", string="获取失败，错误信息：castEnd") or soup.find("div", string="获取失败，错误信息：付费房")) 
     pre_is_live = getLiveState()
     if(is_live and is_live != pre_is_live):
-        send_message(f"{USERID}开播啦！！！",True)   
+        send_msg(f"{USERID}开播啦！！！",True)   
     elif(not is_live and is_live != pre_is_live) :
-        send_message(f"{USERID}已下播",False)
+        send_msg(f"{USERID}已下播",False)
         updateLiveState(False)
-        send_message(f"{USERID}成功结束录播",False)
+        send_msg(f"{USERID}成功结束录播",False)
     elif(not is_live):
-        send_message(f"{USERID}未开播",False)
+        send_msg(f"{USERID}未开播",False)
     else :
-        send_message(f"{USERID}正在直播中",False)
+        send_msg(f"{USERID}正在直播中",False)
     return is_live
 
 def updateLiveState(live_state):
@@ -75,22 +75,22 @@ def getURL(driver):
     return url
 
 def record(driver):
-    send_message("--------正在进行录播检测--------",False)
+    send_msg("--------正在进行录播检测--------",False)
     record_state = getRecordState()
     record_permission = getRecordPermission()
     if(not record_state and record_permission):
-        send_message("--------尝试发起录播--------",False)
+        send_msg("--------尝试发起录播--------",False)
         url = getURL(driver)
         try:
             send_record(driver,USERID,url,TGID)
             updateRecordState(True)
-            send_message(f"{USERID}成功开启录播",True)
+            send_msg(f"{USERID}成功开启录播",True)
         except:
-            send_message(f"{USERID}未能开启录播",True) 
+            send_msg(f"{USERID}未能开启录播",True) 
     elif(record_state):
-        send_message(f"{USERID}已在录制中",False)
+        send_msg(f"{USERID}已在录制中",False)
     else:
-        send_message(f"{USERID}无录制权限",False)
+        send_msg(f"{USERID}无录制权限",False)
 
 def send_msg(msg,needSend):
     print(msg)
