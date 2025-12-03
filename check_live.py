@@ -8,6 +8,7 @@ import time
 import test_database
 from send_record import send_record
 from selenium.webdriver.common.by import By
+from send_to_phone import send_message
 import os
 
 def getUserIDs():
@@ -35,16 +36,24 @@ def startChorme():
     driver = webdriver.Chrome(service=service,options=opts)
     return driver
 
+def getLiveState():
+    return test_database.getLiveState(USERID)
+
 def check_is_live(driver):
-    print("--------正在检测直播状态--------")
+    send_message("--------正在检测直播状态--------",False)
     driver.get(TARGET_URL)
     random_delay()
     soup = BeautifulSoup(driver.page_source, "html.parser")
     is_live = not bool(soup.find("div", string="获取失败，错误信息：castEnd") or soup.find("div", string="获取失败，错误信息：付费房")) 
-    if(is_live):
-        print(f"{USERID}已开播")   
-    else:
-        print(f"{USERID}未开播")
+    pre_is_live = getLiveState()
+    if(is_live and is_live != pre_is_live):
+        send_message(f"{USERID}开播啦！！！",True)   
+    elif(not is_live and is_live != pre_is_live) :
+        send_message(f"{USERID}已下播",False)
+    elif(not is_live):
+        send_message(f"{USERID}未开播",False)
+    else :
+        send_message(f"{USERID}正在直播中",False)
     return is_live
 
 def updateLiveState(live_state):
@@ -64,22 +73,27 @@ def getURL(driver):
     return url
 
 def record(driver):
-    print("--------正在进行录播检测--------")
+    send_message("--------正在进行录播检测--------",False)
     record_state = getRecordState()
     record_permission = getRecordPermission()
     if(not record_state and record_permission):
-        print("--------尝试发起录播--------")
+        send_message("--------尝试发起录播--------",False)
         url = getURL(driver)
         try:
             send_record(driver,USERID,url,TGID)
             updateRecordState(True)
-            print("成功开启录播")
+            send_message(f"{USERID}成功开启录播",True)
         except:
-            print("未能开启录播") 
+            send_message(f"{USERID}未能开启录播",True) 
     elif(record_state):
-        print(f"{USERID}已在录制中")
+        send_message(f"{USERID}已在录制中",False)
     else:
-        print(f"{USERID}无录制权限")
+        send_message(f"{USERID}无录制权限",False)
+
+def send_msg(msg,needSend):
+    print(msg)
+    if(needSend):
+        send_message(msg)
 
 def random_delay(min_sec=MIN_DELAY, max_sec=MAX_DELAY):
     delay = random.uniform(min_sec, max_sec) 
