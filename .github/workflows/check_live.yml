@@ -41,6 +41,6 @@ jobs:
           LIVE_URL: ${{ secrets.LIVE_URL }}
           TGID: ${{ secrets.TGID }}
           RECORD_URL: ${{ secrets.RECORD_URL }}
-          FEISHU_URL: ${{ secrets.FEISHU_URL }}
+          FEISHU_API: ${{ secrets.FEISHU_API }}
         run: |
           python /home/runner/work/recoder/recoder/check_live.py
