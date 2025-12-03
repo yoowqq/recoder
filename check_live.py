@@ -50,6 +50,8 @@ def check_is_live(driver):
         send_message(f"{USERID}开播啦！！！",True)   
     elif(not is_live and is_live != pre_is_live) :
         send_message(f"{USERID}已下播",False)
+        updateLiveState(False)
+        send_message(f"{USERID}成功结束录播",False)
     elif(not is_live):
         send_message(f"{USERID}未开播",False)
     else :
