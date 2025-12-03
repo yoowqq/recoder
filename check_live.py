@@ -71,7 +71,7 @@ def record(driver):
     elif(record_state):
         print(f"{USERID}已在录制中")
     else:
-        print(f"{USERID}无录制权限")
+        print(f"{USERID}无录制权限或未开播")
 
 def workflow(driver):
     live_state = check_is_live(driver)
