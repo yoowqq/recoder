@@ -1,7 +1,8 @@
 import time
+import os
 from selenium.webdriver.common.by import By
 
-TARGET_URL = "https://5721004.xyz/player/record3"
+TARGET_URL = os.getenv("RECORD_URL")
 
 def send_record(driver,userid,url,tgid):
     driver.get(TARGET_URL)

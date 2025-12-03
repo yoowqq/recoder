@@ -8,14 +8,16 @@ import time
 import test_database
 from send_record import send_record
 from selenium.webdriver.common.by import By
+import os
 
 def getUserIDs():
     return test_database.getAllStreamer()
 
 USERLiST = getUserIDs()
 USERID = USERLiST[0]
-TGID = "7536162543"
-TARGET_URL = f"https://5721004.xyz/player/pandalive.html?url={USERID}"
+TGID = os.getenv("TGID")
+LIVE_URL = os.getenv("URL")
+TARGET_URL = f"{LIVE_URL}{USERID}"
 MIN_DELAY = 3  
 MAX_DELAY = 8
 
@@ -95,6 +97,6 @@ if __name__ == '__main__':
     driver = startChorme()
     for i in USERLiST:
         USERID = i
-        TARGET_URL = f"https://5721004.xyz/player/pandalive.html?url={USERID}"
+        TARGET_URL = f"{LIVE_URL}{USERID}"
         workflow(driver)
     driver.quit()

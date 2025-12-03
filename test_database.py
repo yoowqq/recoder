@@ -1,7 +1,8 @@
 from supabase import create_client, Client
+import os
 
-SUPABASE_URL = "https://vwrpxjnpjuwquwhjkhwl.supabase.co"
-SUPABASE_KEY = "sb_publishable_UpJgHYq4RCgFqkAhlMolyg_RhnziVgS"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # 创建Supabase客户端
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -36,5 +37,3 @@ def updateLiveState(name,state):
 def updateRecordState(name,state):
     response = supabase.table("live_state").update({"is_on_record": state}).eq("name",name).execute().data
     return True if response else False
-
-print(getAllStreamer())

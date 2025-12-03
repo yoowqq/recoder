@@ -35,5 +35,11 @@ jobs:
           pip install beautifulsoup4 selenium webdriver-manager supabase
 
       - name: 运行直播检查脚本
+        env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        LIVE_URL: ${{ secrets.LIVE_URL }}
+        TGID: ${{ secrets.TGID }}
+        RECORD_URL: ${{ secrets.RECORD_URL }}
         run: |
           python /home/runner/work/recoder/recoder/check_live.py
