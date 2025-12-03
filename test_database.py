@@ -23,7 +23,7 @@ def getRecordPermission(name):
 
 # 获取主播名单
 def getAllStreamer():
-    response = supabase.table("live_state").select("name").execute().data
+    response = supabase.table("live_state").select("name").eq("enable_check_live",True).execute().data
     streamer_list = [item["name"] for item in response if item.get("name")]
     return streamer_list
 
@@ -36,3 +36,5 @@ def updateLiveState(name,state):
 def updateRecordState(name,state):
     response = supabase.table("live_state").update({"is_on_record": state}).eq("name",name).execute().data
     return True if response else False
+
+print(getAllStreamer())
