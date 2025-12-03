@@ -1,3 +1,4 @@
+import random
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -8,9 +9,15 @@ import test_database
 from send_record import send_record
 from selenium.webdriver.common.by import By
 
-USERID = "yyj01317"
+def getUserIDs():
+    return test_database.getAllStreamer()
+
+USERLiST = getUserIDs()
+USERID = USERLiST[0]
 TGID = "7536162543"
 TARGET_URL = f"https://5721004.xyz/player/pandalive.html?url={USERID}"
+MIN_DELAY = 3  
+MAX_DELAY = 8
 
 def startChorme():
     opts = Options()
@@ -26,13 +33,12 @@ def startChorme():
     driver = webdriver.Chrome(service=service,options=opts)
     return driver
 
- 
 def check_is_live(driver):
     print("--------正在检测直播状态--------")
     driver.get(TARGET_URL)
-    time.sleep(5)
+    random_delay()
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    is_live = not bool(soup.find("div", string="获取失败，错误信息：castEnd")) 
+    is_live = not bool(soup.find("div", string="获取失败，错误信息：castEnd") or soup.find("div", string="获取失败，错误信息：付费房")) 
     if(is_live):
         print(f"{USERID}已开播")   
     else:
@@ -53,7 +59,7 @@ def getRecordPermission():
 
 def getURL(driver):
     url = driver.find_element(By.ID,"url").get_attribute("value")
-    send_record(driver,USERID,url,TGID)
+    return url
 
 def record(driver):
     print("--------正在进行录播检测--------")
@@ -71,16 +77,24 @@ def record(driver):
     elif(record_state):
         print(f"{USERID}已在录制中")
     else:
-        print(f"{USERID}无录制权限或未开播")
+        print(f"{USERID}无录制权限")
+
+def random_delay(min_sec=MIN_DELAY, max_sec=MAX_DELAY):
+    delay = random.uniform(min_sec, max_sec) 
+    time.sleep(delay)
 
 def workflow(driver):
+    random_delay()
     live_state = check_is_live(driver)
     updateLiveState(live_state)
     if(live_state):
         record(driver)
-    time.sleep(2)
-    driver.quit()
+    random_delay()
 
 if __name__ == '__main__':
     driver = startChorme()
-    workflow(driver)
+    for i in USERLiST:
+        USERID = i
+        TARGET_URL = f"https://5721004.xyz/player/pandalive.html?url={USERID}"
+        workflow(driver)
+    driver.quit()
