@@ -16,7 +16,7 @@ def getUserIDs():
 USERLiST = getUserIDs()
 USERID = USERLiST[0]
 TGID = os.getenv("TGID")
-LIVE_URL = os.getenv("URL")
+LIVE_URL = os.getenv("LIVE_URL")
 TARGET_URL = f"{LIVE_URL}{USERID}"
 MIN_DELAY = 3  
 MAX_DELAY = 8
